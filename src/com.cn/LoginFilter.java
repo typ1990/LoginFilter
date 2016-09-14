@@ -1,3 +1,5 @@
+package com.cn;
+
 import javax.servlet.*;
 import javax.servlet.annotation.WebFilter;
 import javax.servlet.http.HttpServlet;
@@ -15,7 +17,7 @@ public class LoginFilter implements Filter {
     @Override
     public void init(FilterConfig filterConfig) throws ServletException {
         this.filterConfig=filterConfig;
-        System.out.println("初始化 filter");
+        System.out.println("初始化 filter***********");
     }
 
     @Override
@@ -31,33 +33,36 @@ public class LoginFilter implements Filter {
             charset="UTF-8";
         }
         req.setCharacterEncoding(charset);
-
+        System.out.println("登录路径：" + req.getRequestURI().toString());
+        System.out.println("过滤字符串："+noLoginPaths);
         if(noLoginPaths!=null){
             String[] strArray=noLoginPaths.split(";");
+
             for(int i=0;i<strArray.length;i++){
+                System.out.println("字符串："+strArray[i]);
                 if(strArray[i]==null||"".equals(strArray[i]))continue;
 
                 if(req.getRequestURI().indexOf(strArray[i])!=-1){
-                    System.out.println("contains string ,enter");
+                    System.out.println("包含字符串，进入$$$$$$$$$$$$$$$$$$$");
                     filterChain.doFilter(servletRequest,servletResponse);
                     return;
                 }
             }
-
         }
 
         if(session.getAttribute("username")!=null){
-            System.out.println("username is null ,enter");
+            System.out.println("用户名不为空，进入$$$$$$$$$$$$$$$$$$$$$$$$$");
             filterChain.doFilter(servletRequest,servletResponse);
         }else{
-            System.out.println("enter login again");
-            rsp.sendRedirect("login.jsp");
+            System.out.println("返回登录界面，进入$$$$$$$$$$$$$$$$$$$$$$$$$$$$$");
+            rsp.sendRedirect(req.getContextPath()+"/login.jsp");
         }
 
     }
 
     @Override
     public void destroy() {
+        System.out.println("销毁 filter***********");
 
     }
 
